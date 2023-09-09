@@ -7,8 +7,8 @@ on:
 
 env:
   REGISTRY: ${{ REGISTRY }}
-  WEBAPP_IMAGE_NAME: bigcapital/bigcapital-webapp
-  SERVER_IMAGE_NAME: bigcapital/bigcapital-server
+  WEBAPP_IMAGE_NAME: df/bigcapital-webapp
+  SERVER_IMAGE_NAME: df/bigcapital-server
 
 jobs:
   build-publish-webapp:
@@ -40,7 +40,7 @@ jobs:
             context: .
             file: ./packages/webapp/Dockerfile
             push: true
-            tags: registry.dftcus.com/df/bigcapital/webapp:latest
+            tags: registry.dftcus.com/df/bigcapital-webapp:latest
             labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
@@ -71,7 +71,7 @@ jobs:
           context: ./
           file: ./packages/server/Dockerfile
           push: true
-          tags: registry.dftcus.com/df/bigcapital/server:latest
+          tags: registry.dftcus.com/df/bigcapital-server:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
