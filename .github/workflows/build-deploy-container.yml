@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ${{ REGISTRY }}
   WEBAPP_IMAGE_NAME: bigcapital/bigcapital-webapp
   SERVER_IMAGE_NAME: bigcapital/bigcapital-server
 
@@ -24,8 +24,8 @@ jobs:
         uses: docker/login-action@v1
         with:
             registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GH_TOKEN }}
+            username: ${{ REGISTRY_USER }}
+            password: ${{ secrets.REGISTRY_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -40,14 +40,14 @@ jobs:
             context: .
             file: ./packages/webapp/Dockerfile
             push: true
-            tags: ghcr.io/bigcapitalhq/webapp:latest
+            tags: registry.dftcus.com/df/bigcapital/webapp:latest
             labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
-      - name: Slack Notification built and published webapp container successfully.
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #- name: Slack Notification built and published webapp container successfully.
+      #  uses: rtCamp/action-slack-notify@v2
+      #  env:
+      #    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
   build-publish-server:
     name: Build and deploy server container
@@ -61,8 +61,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GH_TOKEN }}
+          username: ${{ REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
@@ -71,11 +71,11 @@ jobs:
           context: ./
           file: ./packages/server/Dockerfile
           push: true
-          tags: ghcr.io/bigcapitalhq/server:latest
+          tags: registry.dftcus.com/df/bigcapital/server:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
-      - name: Slack Notification built and published server container successfully.
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #- name: Slack Notification built and published server container successfully.
+      #  uses: rtCamp/action-slack-notify@v2
+      #  env:
+      #    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
